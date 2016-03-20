@@ -1,0 +1,450 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}PDFBundle:Print:createForn{% endblock %}
+
+{% block extra_stylesheets %}
+    <link href="{{ asset('assets/print/css/print_format.css') }}" rel="stylesheet" media="screen">
+
+    <style>
+        div.marge{
+            position: relative;
+            margin: 10mm 10mm 10mm 10mm;
+        }
+        .header {
+            margin-top: 10mm;
+            position: relative;
+            width: 100%;height: 3cm;
+        }
+        .header-logo {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 20%;height: 100%;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .header-logo-data{
+            position: absolute;
+            top: 0px;
+            left: 21%;
+            width: 30%; height: 100%;
+            font-size: 10px;
+            text-align: left;
+
+        }
+        .header-qr{
+            position: absolute;
+            top: 0px;
+            left: 51%;
+            width: 24%;height: 100%;
+            text-align: center;
+            vertical-align:middle;
+        }
+        .header-season{
+            position: absolute;
+            top: 0px;
+            left: 75%;
+            width: 25%;height: 100%;
+            text-align: center;
+        }
+        span.circle {
+            background: white;
+            border-color: black;
+            border-style: solid;
+            border-width: 1px;
+            border-radius: 0.6em;
+            -moz-border-radius: 0.6em;
+            -webkit-border-radius: 0.6em;
+            color: black;
+            display: inline-block;
+            font-weight: bold;
+            line-height: 1.2em;
+            margin-right: 0px;
+            text-align: center;
+            width: 1.2em;
+        }
+        span.on{
+            color: black;
+        }
+        span.off{
+            color: white;
+        }
+
+        #attention{
+            border-radius: 25px;
+            padding: 5px;
+            background-color: #ffcccc;
+            text-align: center;
+            vertical-align:middle;
+        }
+
+        #warning{
+            border-radius: 25px;
+            padding: 5px;
+            background-color: #ffffcc;
+            text-align: center;
+            vertical-align:middle;
+        }
+
+        .authorization {
+            border-radius: 25px;
+            padding: 5px;
+            background-color: #cce6ff;
+            text-align: center;
+            vertical-align:middle;
+        }
+
+        #section{
+            border-style: solid;
+            border-color: lightgray;
+            border-radius: 15px;
+            padding: 5px;
+            background-color: white;
+        }
+        .row{
+            position: relative;
+            width: 100%;height: 10mm;
+            text-align: center;
+            vertical-align: middle;
+            font-size: small;
+        }
+
+        .col1-2{
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 50%;height: 100%;
+            text-align: left
+        }
+        .col2-2{
+            position: absolute;
+            top: 0px;
+            left: 50%;
+            width: 50%;height: 100%;
+            text-align: left
+        }
+        .col1-3{
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 33%;height: 100%;
+        }
+        .col2-3{
+            position: absolute;
+            top: 0px;
+            left: 33%;
+            width: 33%;height: 100%;
+        }
+        .col3-3{
+            position: absolute;
+            top: 0px;
+            left: 66%;
+            width: 33%;height: 100%;
+        }
+        table#t01 {
+            width: 100%;
+        }
+        td#t01cel{
+            border-color: black;
+            border-style: solid;
+            border-width: 1px;
+            border-radius: 0.6em;
+            -moz-border-radius: 0.6em;
+            -webkit-border-radius: 0.6em;
+        }
+        table#t01 th {
+            color: black;
+            background-color: lightgray;
+        }
+        img{
+            height: 100%;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <button onclick="javascript:genPDF();">HTML->JPEG->PDF</button>
+    <button onclick="javascript:PdfFromHTML();">HTML->PDF</button>
+
+    <page size="A4">
+        <div id="P1" class="marge">
+            <div style="height: 0.1mm"></div>
+            <div class="header">
+                <div class="header-logo">
+                    <img height="100%"  src="{{ asset('assets/print/images/logo-generico.jpg') }}" alt="SCA 2000 Evry">
+                </div>
+                <div class="header-logo-data">
+                    <p style="padding-top: 5px;padding-left: 5px;">
+                        Name Company <br>
+                        Slogan<br>
+                        Address Line 1<br>
+                        E-mail
+                    </p>
+                </div>
+                <div class="header-qr">
+                {#
+                    {{qr | raw }}
+                #}
+                </div>
+                <div class="header-season">
+                    <h1>Form Name</h1>
+                </div>
+            </div>
+            <div id="attention">
+                <b>A T T E N T I O N : Important Information </b> </br>
+                Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...
+            </div>
+
+            <div class="row">
+                <div class="col1-3">
+                    <p>ACTIVITE: <b>NATATION</b></p>
+                </div>
+                <div class="col2-3" style="text-align: center">
+                    <p> <span class="circle off">X</span>   Lorem
+                        <span class="circle on">X</span>       ipsum
+                        <span class="circle off">X</span>       dolor
+                    </p>
+                </div>
+                <div class="col3-3" style="text-align: right">
+                    <b>INSCRIPTION</b> <span class="circle off">X</span><br>
+                    <b>REINSCRIPTION</b> <span class="circle on">X</span>
+                </div>
+            </div>
+            <div class="row" style="height: 5mm">
+                <div class="col1-3">
+                    DATE D’INSCRIPTION:  <b>00/00/0000</b>
+                </div>
+            </div>
+            <div class="row" style="height: 5mm">
+                <div class="col1-3">
+                    JOURS ET HORAIRES DE L’ACTIVITE:
+                </div>
+            </div>
+            <div class="row" style="height: 5mm">
+                <div class="col1-3">
+                    Dirigeant/bénévole <span class="circle off">X</span>
+                    Pratiquant <span class="circle off">X</span><br>
+                </div>
+                <div class="col2-3">
+                    N° de licence:
+                </div>
+
+            </div>
+            <div id="warning">
+                <b>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..."</b><br>
+                ("No hay nadie que ame el dolor mismo, que lo busque, lo encuentre y lo quiera, simplemente porque es el dolor.)
+            </div>
+            <small><b>L’ADHERENT:</b></small>
+            <div id="section" style="height: 13mm">
+                <div class="row" style="height: 5mm">
+                    <div class="col1-2" style="text-align: left">
+                        <span class="circle off">X</span>Masculin <span class="circle off">X</span>Féminin
+                    </div>
+                    <div class="col2-2" style="text-align: right    ">
+                        DATE DE NAISSANCE: 00/00/0000</br>
+                    </div>
+                </div>
+                <div class="row" style="height: 8mm">
+                    <div class="col1-2" style="text-align: left">
+                        NOM:</br>
+                        NATIONALITE:</br>
+                    </div>
+                    <div class="col2-2" style="text-align: left">
+                        PRENOM:</br>
+                        LIEU DE NAISSANCE:</br>
+                    </div>
+                </div>
+
+            </div>
+            <small><b>PARENTS (pour les mineurs):</b></small>
+            <div id="section" style="height: 8mm">
+                <div class="row" style="height: 8mm">
+                    <div class="col1-2" style="text-align: left">
+                        NOM:</br>
+                        PRENOM:</br>
+                    </div>
+                </div>
+            </div>
+            <small><b>ADRESSE:</b></small>
+            <div id="section" style="height: 8mm">
+                <div class="row" style="height: 4mm">
+                    <div class="col1-2">
+                        N°:
+                    </div>
+                    <div class="col2-2">
+                        RUE:
+                    </div>
+                </div>
+                <div class="row" style="height: 4mm">
+                    <div class="col1-2">
+                        CODE POSTAL:
+                    </div>
+                    <div class="col2-2">
+                        VILLE:
+                    </div>
+                </div>
+            </div>
+
+            <small><b>TELEPHONE:</b></small>
+            <div id="section" style="height: 8mm">
+                <div class="row" style="height: 4mm" >
+                    <div class="col1-3" style="text-align: left">DOMICILE: 00-00-00-00-00</div>
+                    <div class="col2-3" style="text-align: left">TRAVAIL: 00-00-00-00-00	</div>
+                    <div class="col3-3" style="text-align: left">PORTABLE: 00-00-00-00-00</div>
+                </div>
+                <div class="row" style="height: 4mm">
+                    <div class="col1-2">E-MAIL:</div>
+                </div>
+            </div>
+
+            <small><b>PERSONNES A CONTACTER  EN CAS D’ URGENCE:</b></small>
+            <div id="section" style="height: 12mm">
+                <div class="row" style="height: 4mm">
+                    <div class="col1-2" style="text-align: left">
+                        NOM:</br>
+                    </div>
+                    <div class="col2-2" style="text-align: left">
+                        PRENOM:</br>
+                    </div>
+                </div>
+                <div class="row" style="height: 4mm" >
+                    <div class="col1-3" style="text-align: left"><small><b>TELEPHONE:</b></small> DOMICILE: 00-00-00-00-00</div>
+                    <div class="col2-3" style="text-align: center">TRAVAIL: 00-00-00-00-00	</div>
+                    <div class="col3-3" style="text-align: left">PORTABLE: 00-00-00-00-00</div>
+                </div>
+                <div class="row" style="height: 4mm">
+                    <div class="col1-2">E-MAIL:</div>
+                </div>
+            </div>
+            <div class="authorization" style="height: 15mm; text-align: justify">
+                "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..." "No hay
+                nadie que ame el dolor mismo, que lo busque, lo encuentre y lo quiera, simplemente porque es el dolor."
+                lo encuentre y lo quiera, simplemente porque
+            </div>
+            <small><b>Paiement</b></small>
+            <div class="row" style="height: 4mm" >
+                <table id="t01" style="width:100%">
+                    <tr>
+                        <th>N° CHEQUE(S)</th>
+                        <th>BANQUE</th>
+                        <th>EMETTEUR DU CHEQUE	</th>
+                        <th>MOIS</th>
+                        <th>MONTANT</th>
+                    </tr>
+                    <tr style="height: 20mm; background-color: #eee;">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>Prix de la cotisation:</td>
+                        <td id="t01cel" style="text-align: right" >€</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>Option assurance:</td>
+                        <td id="t01cel" style="text-align: right" >€</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">POUR EN ESPECES, EXIGEZ UN REÇU</td>
+                        <td></td>
+                        <td>TOTAL:</td>
+                        <td id="t01cel" style="text-align: right" >€</td>
+
+                    </tr>
+                </table>
+                <div class="row">
+                    <div class="col1-2">
+                        <div class="authorization" style="text-align: justify">
+                            <span class="circle off">X</span> <b>Truc à aprouver</b>
+
+                            Nulla velit lacus, lacinia at rutrum quis, commodo ac nulla. Maecenas non diam id lectus
+                            semper rutrum eu vel lorem. Nam accumsan et urna dictum viverra. Etiam imperdiet sagittis
+                            eros, at vehicula turpis condimentum ut. Morbi maximus molestie tortor et scelerisque.
+                            Vivamus tincidunt tellus sapien, ut vestibulum risus sagittis sit amet. Maecenas efficitur
+
+                        </div>
+                    </div>
+                    <div id="section" class="col2-2" style="height: 30mm">
+                        tortor sed bibendum tincidunt. Suspendisse eros sem, cursus et finibus nec, accumsan sit amet erat.
+                        Phasellus sodales elementum ultrices. </br>
+                        « LU ET APPROUVE »  + SIGNATURE OBLIGATOIRE :
+                    </div>
+                </div>
+            </div>
+        </div>
+    </page>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{{ asset('assets/print/js/jquery-2.2.1.min.js') }}"></script>
+    <script src="{{ asset('assets/print/js/html2canvas.js') }}"></script>
+    <script src="{{ asset('assets/print/js/jspdf.debug.js') }}"></script>
+{% endblock %}
+
+{% block script %}
+    <script>
+        function genPDF() {
+            html2canvas(document.getElementById("P1"),{
+                onrendered: function (canvas){
+                    var img = canvas.toDataURL("image/png");
+                    var doc = new jsPDF();
+                    doc.a
+                    ddImage(img,'JEPG',0,0);
+                    doc.save('test.pdf');
+                }
+            });
+        }
+    </script>
+
+    <script type="text/javascript">
+        function PdfFromHTML() {
+            var pdf = new jsPDF('p', 'pt', 'letter');
+            // source can be HTML-formatted string, or a reference
+            // to an actual DOM element from which the text will be scraped.
+            source = document.getElementById("P1");
+
+            // we support special element handlers. Register them with jQuery-style
+            // ID selector for either ID or node name. ("#iAmID", "div", "span" etc.)
+            // There is no support for any other type of selectors
+            // (class, of compound) at this time.
+            specialElementHandlers = {
+                // element with id of "bypass" - jQuery style selector
+                '#bypassme': function(element, renderer) {
+                    // true = "handled elsewhere, bypass text extraction"
+                    return true
+                }
+            };
+            margins = {
+                top: 10,
+                bottom: 10,
+                left: 10,
+                width: 440
+            };
+            // all coords and widths are in jsPDF instance's declared units
+            // 'inches' in this case
+            pdf.fromHTML(
+                    source, // HTML string or DOM elem ref.
+                    margins.left, // x coord
+                    margins.top, {// y coord
+                        'width': margins.width, // max width of content on PDF
+                        'elementHandlers': specialElementHandlers
+                    },
+                    function(dispose) {
+                        // dispose: object with X, Y of the last line add to the PDF
+                        //          this allow the insertion of new lines after html
+                        pdf.save('Test.pdf');
+                    }
+                    , margins);
+        }
+    </script>
+
+
+{% endblock %}
